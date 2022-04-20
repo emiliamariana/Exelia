@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: sans-serif;
+        }
+        
+        h1 {
+            color: coral;
+        }
+        
+        .grid-container {
+            margin-top: 100px;
+            columns: 3 100px;
+            column-gap: 1.5rem;
+            width: 90%;
+            display: inline-flex;
+            height: auto;
+        }
+        
+        .movie {
+            margin: 0 1.5rem 1.5rem 0;
+            display: inline-block;
+            border: solid 2px black;
+            padding: 5px;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            transition: all .25s ease-in-out;
+            filter: grayscale(100%);
+            width: auto;
+        }
+        
+        .movie:hover {
+            filter: grayscale(0);
+            border-color: coral;
+        }
+        
+        img {
+            width: 100%;
+            border-radius: 5px;
+            transition: all .25s ease-in-out;
+            height: auto;
+        }
+        
+        .input-group {
+            margin-top: 100px;
+        }
+        
+        .background {
+            background-image: url('https://www.mytemplatestorage.com/wp-content/uploads/2017/04/2.jpg');
+            opacity: 0.5;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+        }
+        
+        @media (max-width:600px) {
+            .grid-container {
+                width: 50%;
+                display: block;
+            }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Document</title>
+    <script>
+        $(document).ready(function() {
+
+            document.getElementById('results').innerHTML = ""
+            var maxLimit = 3;
+
+            $('#searchMovie').click('.lightboxgallery-gallery-item', function() {
+                const value = $('#movieTitle').val();
+                $.get('http://www.omdbapi.com/?&apikey=a97ff965&s=' + value, function(data, status) {
+
+                    success: var innerHTML = "";
+                    if (maxLimit > data.Search.length) {
+                        maxLimit = data.Search.length;
+                    }
+                    for (var i = 0; i < maxLimit; i++) {
+                        if (data.Search[i].Title && data.Search[i].Poster && data.Search[i].Type == "movie") {
+                            innerHTML += "<div class='movie col-md-4'><span class='col-md-4 ' title='" + data.Search[i].Title + "'</span>" + "<a href='" + "http://www.imdb.com/title/" + data.Search[i].imdbID + "'target='_blank'>" + "<img  src='" + data.Search[i].Poster + "'>" + "</a></div>";
+                        }
+                    }
+
+                    $('#results').html(innerHTML);
+                });
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <div class="row">
+            <div class="input-group">
+                <div class="form-outline">
+                    <input class="form-control" type="text" placeholder="Enter movie name" id="movieTitle" />
+                </div>
+                <button class="btn btn-primary" id="searchMovie">Search
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="grid-container" id="results"></div>
+        </div>
+
+    </div>
+</body>
+
+</html>
